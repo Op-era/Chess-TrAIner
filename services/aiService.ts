@@ -40,6 +40,7 @@ The JSON output must have this structure:
           "fenBeforeMove": "The FEN string of the board position *before* the mistake.",
           "fenAfterMove": "The FEN string of the board position *after* the incorrect move was made.",
           "suggestedMove": "The suggested better move in standard algebraic notation (e.g., 'Be2').",
+          "playerColor": "The color of the player being analyzed in this specific game ('w' for white, 'b' for black). Determine this from the PGN headers.",
           "explanation": "A brief explanation of why this specific move is a good example of the recurring theme and why the suggested move is better."
         }
       ]

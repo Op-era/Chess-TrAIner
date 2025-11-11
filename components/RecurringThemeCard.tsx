@@ -161,6 +161,8 @@ const ExampleAnalysis: React.FC<{ example: MistakeExample }> = ({ example }) => 
         setStatus('Board is unlocked. Play out the position!');
     }
 
+    const orientation = example.playerColor === 'b' ? 'black' : 'white';
+
     return (
         <div className="bg-slate-800/70 p-4 rounded-lg border border-slate-700">
             <p className="text-sm font-semibold text-slate-400 mb-2">{example.gameDescription}</p>
@@ -173,6 +175,7 @@ const ExampleAnalysis: React.FC<{ example: MistakeExample }> = ({ example }) => 
                             onMove={handleMove}
                             isInteractive={isInteractive}
                             lastMove={lastMove}
+                            orientation={orientation}
                         />
                     </div>
                 </div>

@@ -6,6 +6,7 @@ export interface MistakeExample {
     fenAfterMove: string;
     suggestedMove: string;
     explanation: string;
+    playerColor: 'w' | 'b';
 }
 
 export interface RecurringTheme {

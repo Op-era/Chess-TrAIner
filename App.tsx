@@ -172,7 +172,10 @@ const App: React.FC = () => {
                                         disabled={isLoading || selectedGameIndexes.length === 0}
                                         className="w-full sm:w-auto flex-grow items-center justify-center gap-2 px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 disabled:cursor-not-allowed transition-all transform hover:scale-105"
                                     >
-                                        Analyze {selectedGameIndexes.length > 0 ? selectedGameIndexes.length : ''} Game(s)
+                                        Analyze
+                                        {selectedGameIndexes.length > 0 && 
+                                            ` ${selectedGameIndexes.length} ${selectedGameIndexes.length === 1 ? 'Game' : 'Games'}`
+                                        }
                                     </button>
                                      {isLoading && (
                                         <div className="flex items-center gap-2 text-slate-400">
