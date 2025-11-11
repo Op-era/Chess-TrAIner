@@ -1,0 +1,5 @@
+{
+  "name": "Chess AI Trainer",
+  "description": "An AI-powered chess training application that analyzes your games to identify repeatable mistakes. Get feedback in the style of a grandmaster to improve your positional and tactical understanding of chess.",
+  "requestFramePermissions": []
+}
