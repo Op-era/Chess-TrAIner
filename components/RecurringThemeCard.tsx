@@ -21,23 +21,37 @@ const ExampleAnalysis: React.FC<{ example: MistakeExample }> = ({ example }) => 
     const [lastMove, setLastMove] = useState<{ from: string, to: string } | null>(null);
     const [status, setStatus] = useState<string>('Board is ready.');
 
-    // This effect syncs the component's state with the example prop and validates the FEN.
+    // This effect syncs the component's state with the example prop and validates the data from the AI.
     useEffect(() => {
         console.log('ExampleAnalysis: useEffect triggered for game:', example.gameDescription);
+        
+        // 1. Validate FEN first, as it's critical for rendering the board
         try {
-            // Validate the FEN from the AI before using it.
             console.log("ExampleAnalysis: Validating FEN from AI:", example.fenBeforeMove);
-            new Chess(example.fenBeforeMove);
-            setFen(example.fenBeforeMove);
-            setStatus('Board is ready.');
-            setError(null);
-            console.log("ExampleAnalysis: FEN is valid.");
+            new Chess(example.fenBeforeMove); // Throws on invalid FEN
         } catch (e) {
             console.error("FATAL: Invalid FEN provided by AI:", example.fenBeforeMove, e);
             setFen(null);
             setError("The AI provided an invalid board position (FEN) for this example.");
+            return; // Stop processing if FEN is bad
         }
-    }, [example.fenBeforeMove]);
+
+        // 2. Then validate player color, which is critical for correct orientation
+        if (example.playerColor !== 'w' && example.playerColor !== 'b') {
+            console.error("FATAL: Invalid playerColor provided by AI:", example.playerColor);
+            setFen(null); // Prevent rendering if orientation is wrong
+            setError("The AI provided invalid player color data, so the board perspective cannot be determined.");
+            return; // Stop processing
+        }
+
+        // If all validations pass, reset state for the new example
+        setError(null);
+        setFen(example.fenBeforeMove);
+        setStatus('Board is ready.');
+        setIsInteractive(false);
+        setLastMove(null);
+
+    }, [example]);
 
     // useMemo safely creates a chess.js instance from the current FEN state.
     const game = useMemo(() => {
@@ -50,17 +64,17 @@ const ExampleAnalysis: React.FC<{ example: MistakeExample }> = ({ example }) => 
             return new Chess(fen);
         } catch (e) {
             console.error("ExampleAnalysis: useMemo failed to create Chess instance:", e);
-            // This case should be rare since we validate in the effect, but it's a good safeguard.
             return null;
         }
     }, [fen]);
     
-    // Render an error message if the FEN was invalid.
+    // Render an error message if the FEN or other data was invalid.
     if (error) {
         return (
-            <div className="bg-red-900/50 p-4 rounded-lg border border-red-700 text-red-300">
+            <div className="bg-red-900/50 p-4 rounded-lg border border-red-700 text-red-300 h-full flex flex-col justify-center">
                 <h5 className="font-bold">Error Loading Example</h5>
                 <p className="text-sm">{error}</p>
+                 <p className="text-xs mt-2 text-red-400">This is due to an error in the AI's response.</p>
             </div>
         );
     }
